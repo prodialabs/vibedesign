@@ -45,7 +45,7 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
 ### Edge Functions
 
 **`generate-image`** — accepts `{ prompt, seed, category}`:
-- For all categories → Prodia `inference.flux-2.klein-4b.txt2img.v1`, 512x512, 4 steps
+- For all categories → Prodia `inference.flux-2.klein.4b.txt2img.v1`, 512x512, 4 steps
 
 ### Default Prompt Settings
 
