@@ -19,12 +19,11 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
    - Category dropdown
    - Concept text input
    - Generate button
-   - When category is `Product Placement`: show an image-upload trigger to attach a product photo
 
 3. **Prompt variation engine** (`src/lib/promptVariations.ts`):
    - 30 style modifiers per category
-   - 8 lighting modifiers (skipped for `logo` and `product`)
-   - 5 quality suffixes (separate set for logos)
+   - 8 lighting modifiers 
+   - 5 quality suffixes 
    - `buildPrompt(userConcept, category, customSystemPrompt?)` randomizes one style + lighting + quality, prefixes the optional custom system prompt, and puts the user's concept first.
 
 4. **Image grid**:
