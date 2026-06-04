@@ -4,8 +4,8 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
 
 ### Stack
 - React + Vite + TypeScript
-- Tailwind CSS + shadcn/ui (semantic design tokens in `index.css` and `tailwind.config.ts`, HSL only — no hardcoded colors in components)
 - Lovable Cloud (Supabase) for edge functions, storage, and secrets
+- cheap LLM on Lovable for prompt variation
 - Image generation via **Prodia API** (secret: `PRODIA_API_KEY`)
 
 ### Categories
@@ -16,7 +16,7 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
 1. **Header** with app title and a Settings (gear) icon that opens the Prompt Settings modal.
 
 2. **Search bar** with:
-   - Category dropdown
+   - Category dropdown (starting with product placement)
    - Concept text input
    - Generate button
 
@@ -44,19 +44,17 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
 
 ### Edge Functions
 
-**`generate-image`** — accepts `{ prompt, seed, category, imageUrl? }`:
+**`generate-image`** — accepts `{ prompt, seed, category}`:
 - For all categories → Prodia `inference.flux-2.klein-4b.txt2img.v1`, 512x512, 4 steps
-- Returns `{ imageUrl }`
 
-**`refine-image`** — accepts selected image URLs + prompt, composes them into a single image, returns `{ imageUrl }`.
-
-### Storage
-Create a public bucket `product-images` for Product Placement uploads (Prodia img2img requires a public URL). Add RLS policies on `storage.objects` allowing public read and anon/authenticated insert for that bucket.
-
-### Default Prompt Settings (seed values)
+### Default Prompt Settings
 
 **Product Placement**
-> Versatile product placement image featuring the product naturally incorporated into a believable real-world setting. Vary the scene, environment, lighting, camera angle, background, and lifestyle context to suit the product type. Keep the product visually prominent, clearly identifiable, and accurately represented while making the overall image feel authentic, polished, and commercially appealing.
+> "{userConcept} empty scene photograph with negative space for product placement. {style}. {lighting}. {quality}."
+
+{style}: one of 30 empty-scene modifiers (e.g. "Bare weathered wood surface bathed in warm golden hour lighting")
+{lighting}: one of 8 shared lighting lines
+{quality}: one of 5 standard quality suffixes (e.g. "Professional web design render, high quality")
 
 **Website**
 > Modern, professional website design with clean typography, generous whitespace, and a clear visual hierarchy. Focus on conversion and trust.
@@ -69,7 +67,7 @@ Create a public bucket `product-images` for Product Placement uploads (Prodia im
 - Loading skeletons + animated dots while generating
 
 ### Secrets
-- `PRODIA_API_KEY` (required) — prompt the user to add it on first run.
+- `PRODIA_API_KEY` (required) — prompt the user to add it on first run. (do not forget to set up auto retry for 429s)
 
 ---
 
