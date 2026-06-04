@@ -5,7 +5,6 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
 ### Stack
 - React + Vite + TypeScript
 - Lovable Cloud (Supabase) for edge functions, storage, and secrets
-- cheap LLM on Lovable for prompt variation
 - Image generation via **Prodia API** (secret: `PRODIA_API_KEY`)
 
 ### Categories
