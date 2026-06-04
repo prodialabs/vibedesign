@@ -42,10 +42,20 @@ Build **Vibe Design**, an AI design inspiration generator. Users pick a category
    - Persisted in `localStorage` under `vibe-design-prompt-settings`
    - Seed with the default prompts below (users can edit/reset)
 
+### Product Placement Workflow
+
+Product Placement is different from other categories — it generates an **empty scene** that a real product photo gets composited into via img2img.
+
+1. **Upload**: User uploads a product photo → stored in a `product-images` Supabase storage bucket → public URL saved.
+2. **Prompt construction** (client-side, no LLM): `buildPrompt` assembles `{customSystemPrompt}. {userConcept} empty scene photograph with negative space for product placement. {style}. {lighting}. {quality}.` — all 30 style modifiers describe only surfaces/surroundings/negative space (never the product itself).
+3. **Generation**: The edge function sends the composed prompt **plus the uploaded product image URL** to Prodia `inference.flux.dev.img2img.v1` at `strength: 0.75` (1024×640). The prompt steers the scene; img2img preserves the real product.
+4. **Why empty-scene phrasing**: If modifiers described the product, img2img would hallucinate a second product on top of the real one. Describing only the environment keeps the uploaded product intact.
+
 ### Edge Functions
 
-**`generate-image`** — accepts `{ prompt, seed, category}`:
-- For all categories → Prodia `inference.flux-2.klein.4b.txt2img.v1`, 512x512, 4 steps
+**`generate-image`** — accepts `{ prompt, seed, category, imageUrl? }`:
+- **Product Placement** → Prodia `inference.flux.dev.img2img.v1`, 1024×640, `strength: 0.75`, requires `imageUrl` (uploaded product photo)
+- **All other categories** → Prodia `inference.flux-2.klein.4b.txt2img.v1`, 512×512, 4 steps
 
 ### Default Prompt Settings
 
